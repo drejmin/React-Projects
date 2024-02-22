@@ -4,7 +4,7 @@ function Timer() {
     const [secondsLeft, setSecondsLeft] = useState(60*25);
     const [isRunning, setIsRunning] = useState(false);
     const [initialTime, setInitialTime] = useState(60*25);
-    const [timerName, setTimerName] = useState('Select Time');
+    const [timerName, setTimerName] = useState('Pomodoro');
 
     useEffect(()=>{
         let interval = null;
