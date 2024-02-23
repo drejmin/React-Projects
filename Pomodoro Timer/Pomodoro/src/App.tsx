@@ -1,9 +1,12 @@
-import React from 'react'
+// import MovingBackground from './components/ui/MovingBackground'
+import { MovingBackground } from './components/ui/MovingBackground'
 import Timer from './pages/timer'
 
-const App = () => {
+
+const App:React.FC = () => {
   return (
     <div className='App'>
+      <MovingBackground/>
       <Timer/>
     </div>
   )

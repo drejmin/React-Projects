@@ -1,15 +1,19 @@
 import { Button } from '@/components/ui/button';
 import * as Select from '@radix-ui/react-select';
 import { useEffect, useState } from 'react';
-import './timer.css'
+import '../assets/Relaxing Alarm tone stress free.mp3'
 
 function Timer() {
   const [secondsLeft, setSecondsLeft] = useState(60 * 25);
   const [isRunning, setIsRunning] = useState(false);
   const [initialTime, setInitialTime] = useState(60 * 25);
   const [timerName, setTimerName] = useState('Pomodoro');
+  const [alarmPlayed, setAlarmPlayed] = useState(false);
 
+  const alarmSound = new Audio('../assets/Relaxing Alarm tone stress free.mp3');
+  
   useEffect(() => {
+    
     let interval = null;
 
     if (isRunning && secondsLeft > 0) {
@@ -20,15 +24,25 @@ function Timer() {
       clearInterval(interval);
     }
 
-    return () => clearInterval(interval);
-  }, [isRunning, secondsLeft]);
+    if (secondsLeft ===0 && !alarmPlayed){
+        alarmSound.play();
+        setAlarmPlayed(true);
+    }
 
-  const handleValueChange = (value) => {
+    if (secondsLeft > 0 && alarmPlayed){
+        setAlarmPlayed(false)
+    }
+
+    return () => clearInterval(interval);
+  }, [isRunning, secondsLeft, alarmPlayed, alarmSound]);
+
+  const handleValueChange = (value: string) => {
     const newTime = parseInt(value, 10);
     setInitialTime(newTime);
     setSecondsLeft(newTime);
-    setIsRunning(false); // Automatically pause timer on time change
-    // Update the timer name based on the value
+    setIsRunning(false);
+    setAlarmPlayed(false);
+
     switch (value) {
       case '1500':
         setTimerName('Pomodoro');
@@ -45,23 +59,27 @@ function Timer() {
   };
 
   return (
-    <div  className='flex flex-1 justify-center items-center flex-col py-10'>
-      <h2>{timerName}: {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, '0')}</h2>
-      <Select.Root onValueChange={handleValueChange}>
-        <Select.Trigger aria-label="Time intervals">
-          <Select.Value placeholder='Select a Interval' >{timerName}</Select.Value>
-        </Select.Trigger>
-        <Select.Content>
-          <Select.Viewport>
-            <Select.Item value="1500">Pomodoro</Select.Item>
-            <Select.Item value="300">Short Break</Select.Item>
-            <Select.Item value="900">Long Break</Select.Item>
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Root>
-      <Button className="shad-button_primary whitespace-nowrap" variant="ghost" onClick={() => setIsRunning(true)} disabled={isRunning || secondsLeft === 0}>Start</Button>
-      <Button className="shad-button_primary whitespace-nowrap" variant="ghost" onClick={() => setIsRunning(false)} disabled={!isRunning}>Pause</Button>
-      <Button className="shad-button_primary whitespace-nowrap" variant="ghost" onClick={() => { setSecondsLeft(initialTime); setIsRunning(false); }}>Reset</Button>
+    <div  className='common-container flex flex-1 justify-center items-center flex-col mt-10 py-10'>
+      <h2 className='h1-bold md: title-bold text-center w-full'>{timerName}: {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, '0')}</h2>
+      <div className='common-container'>
+        <Select.Root onValueChange={handleValueChange} >
+            <Select.Trigger className=' flex flex-col h3-bold md: h2-bold text-center' aria-label="Time intervals" >
+            <Select.Value placeholder='Select a Interval'>{timerName}▾</Select.Value>
+            </Select.Trigger>
+            <Select.Content>
+            <Select.Viewport className='bg: to-black flex flex-col h3-bold md: h2-bold text-center'>
+                <Select.Item className='mt-8' value="1500">Pomodoro</Select.Item>
+                <Select.Item className='mt-1.5' value="300">Short Break</Select.Item>
+                <Select.Item className='mt-1.5' value="900">Long Break</Select.Item>
+            </Select.Viewport>
+            </Select.Content>
+        </Select.Root>
+      </div>
+      <div className='flex flex-row padding:2 mt-4 whitespace-nowrap'>
+      <Button className='h3-bold' onClick={() => setIsRunning(true)} disabled={isRunning || secondsLeft === 0}>Start</Button>
+      <Button className='h3-bold' onClick={() => setIsRunning(false)} disabled={!isRunning}>Pause</Button>
+      <Button className='h3-bold' onClick={() => { setSecondsLeft(initialTime); setIsRunning(false); }}>Reset</Button>
+      </div>
     </div>
   );
 }
