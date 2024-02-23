@@ -1,14 +1,15 @@
 // import MovingBackground from './components/ui/MovingBackground'
-import { MovingBackground } from './components/ui/MovingBackground'
 import Timer from './pages/timer'
+import {Routes, Route} from 'react-router-dom';
 
 
-const App:React.FC = () => {
+const App = () => {
   return (
-    <div className='App'>
-      <MovingBackground/>
-      <Timer/>
-    </div>
+    <main className='App'>
+        <Routes >
+            <Route path='/' element={<Timer/>}/>
+        </Routes>
+    </main>
   )
 }
 
