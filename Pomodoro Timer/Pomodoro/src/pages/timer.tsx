@@ -16,28 +16,23 @@ const Timer=() => {
 
   
   useEffect(() => {
+    if (!isRunning) return;
 
-    let interval = null;
+    if (secondsLeft === 0) {
+        if (!alarmPlayed) {
+            alarmSound.current.play().catch(console.error);
+            setAlarmPlayed(true);
+        }
+    } else {
+        const intervalId = setInterval(() => {
+            setSecondsLeft(prev => prev - 1);
+        }, 1000);
 
-    if (isRunning && secondsLeft > 0) {
-      interval = setInterval(() => {
-        setSecondsLeft((secondsLeft) => secondsLeft - 1);
-      }, 1000);
-    } else if (!isRunning && secondsLeft !== 0) {
-      clearInterval(interval);
+        return () => clearInterval(intervalId);
     }
+}, [isRunning, secondsLeft, alarmPlayed]);
 
-    if (secondsLeft ===0 && !alarmPlayed){
-        alarmSound.current.play().catch(error=> console.log(error));
-        setAlarmPlayed(true);
-    }
 
-    if (secondsLeft > 0 && alarmPlayed){
-        setAlarmPlayed(false)
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, secondsLeft, alarmPlayed, alarmSound]);
 
   const handleValueChange = (value: string) => {
     const newTime = parseInt(value, 10);
