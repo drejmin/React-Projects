@@ -3,11 +3,11 @@ import Timer from './pages/timer'
 import {Routes, Route} from 'react-router-dom';
 
 
-const App = () => {
+function App() {
   return (
     <main className='App'>
         <Routes >
-            <Route path='/' element={<Timer/>}/>
+            <Route index path='/timer' element={<Timer/>}/>
         </Routes>
     </main>
   )
